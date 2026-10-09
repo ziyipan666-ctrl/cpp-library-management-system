@@ -1,0 +1,6 @@
+# Compiled files
+*.o
+*.exe
+
+# IDE temporary files
+*.layout
