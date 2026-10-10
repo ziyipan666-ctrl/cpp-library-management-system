@@ -1,6 +1,29 @@
-# Compiled files
+# ========== C/C++ 编译产物 ==========
 *.o
+*.obj
 *.exe
+*.out
+*.dll
+*.so
+*.a
 
-# IDE temporary files
+# ========== CMake 构建目录（非常重要！） ==========
+build/
+cmake-build-*/
+CMakeCache.txt
+CMakeFiles/
+install_manifest.txt
+
+# ========== VS Code 本地IDE缓存（不上传github） ==========
+.vscode/
+*.code-workspace
+
+# ========== Dev-C++ 遗留项目文件（你之前旧工程的，一并忽略） ==========
+*.dev
 *.layout
+
+# ========== 系统生成垃圾文件 ==========
+# Windows
+Thumbs.db
+# macOS
+.DS_Store
