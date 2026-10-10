@@ -34,8 +34,10 @@ public:
     // 获取借阅次数Top10，key:书名 value:借阅次数
     vector<pair<string, int>> getBorrowCountTop10();
 
+    // 获取用户借阅记录
     vector<BorrowRecord> getMyBorrowRecords(const string& account);
     
+    // 分页获取借阅记录，start下标，count取多少条
     vector<BorrowRecord> getPageData(const vector<BorrowRecord>& all, int start, int count);
 };
 

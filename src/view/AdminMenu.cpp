@@ -8,6 +8,7 @@ AdminMenu::AdminMenu(AdminController& ctrl)
     : adminCtrl(ctrl)
 { }
 
+// 显示管理员菜单循环
 void AdminMenu::showAdminLoop()
 {
     while(true)
@@ -48,6 +49,7 @@ void AdminMenu::showAdminLoop()
     }
 }
 
+// 添加图书
 void AdminMenu::menuAddBook()
 {
     int ch;
@@ -70,6 +72,7 @@ void AdminMenu::menuAddBook()
     }while(ch ==1);
 }
 
+// 删除图书
 void AdminMenu::menuDeleteBook()
 {
     int ch;
@@ -96,6 +99,7 @@ void AdminMenu::menuDeleteBook()
     }while(ch==1);
 }
 
+// 修改图书
 void AdminMenu::menuModifyBook()
 {
     int ch;
@@ -137,6 +141,7 @@ void AdminMenu::menuModifyBook()
     }while(ch==1);
 }
 
+// 查找图书
 void AdminMenu::menuFindBook()
 {
     int ch;
@@ -183,6 +188,7 @@ void AdminMenu::menuFindBook()
     }while(ch==1);
 }
 
+// 显示全部图书
 void AdminMenu::menuShowAllBook()
 {
     vector<Book> all = adminCtrl.getAllBookList();
@@ -208,6 +214,7 @@ void AdminMenu::menuShowAllBook()
     }
 }
 
+// 添加用户
 void AdminMenu::menuAddUser()
 {
     int ch;
@@ -224,6 +231,7 @@ void AdminMenu::menuAddUser()
     }while(ch ==1);
 }
 
+// 删除用户
 void AdminMenu::menuDeleteUser()
 {
     int ch;
@@ -237,6 +245,7 @@ void AdminMenu::menuDeleteUser()
     }while(ch==1);
 }
 
+// 修改用户
 void AdminMenu::menuModifyUser()
 {
     int ch;
@@ -251,6 +260,7 @@ void AdminMenu::menuModifyUser()
     }while(ch==1);
 }
 
+// 查找用户
 void AdminMenu::menuFindUser()
 {
     int ch;
@@ -273,6 +283,7 @@ void AdminMenu::menuFindUser()
     }while(ch==1);
 }
 
+// 显示全部用户
 void AdminMenu::menuShowAllUser()
 {
     vector<User*> all = adminCtrl.getAllUserList();
@@ -298,6 +309,7 @@ void AdminMenu::menuShowAllUser()
     }
 }
 
+// 显示全部借阅记录
 void AdminMenu::menuShowAllBorrowRecord()
 {
     vector<BorrowRecord> all = adminCtrl.getAllBorrowRecordList();
@@ -322,3 +334,4 @@ void AdminMenu::menuShowAllBorrowRecord()
         else if(op =='q') break;
     }
 }
+

@@ -1,23 +1,32 @@
-#ifndef LIBRARY_MANAGEMENT_SYSTEM_USER_H
-#define LIBRARY_MANAGEMENT_SYSTEM_USER_H
+#ifndef USER_H
+#define USER_H
 
 #include <string>
+#include <vector>
+#include "BorrowRecord.h"
+using namespace std;
 
-class User {
-protected:
-    std::string id;
-    std::string username;
-    std::string password;
-
+// 用户基类，读者Reader、管理员Admin继承该类
+class User
+{
 public:
-    User(const std::string& id, const std::string& username, const std::string& password);
-    virtual ~User() = default; // Virtual destructor for base class
+    string account;                 // 用户账号
+    string password;                // 用户密码
+    int role;                       // 用户角色：1=读者，2=管理员
+    vector<BorrowRecord> borrowHistory;  // 用户全部借阅记录
+    // 记录中returnDate为空代表未归还，不为空代表已归还
 
-    std::string getId() const;
-    std::string getUsername() const;
-    std::string getPassword() const;
+    // 构造函数，带默认参数
+    User(string account = "", string password = "", int role = 1);
 
-    void setPassword(const std::string& password);
+    // 虚析构，保证派生类析构正确调用
+    virtual ~User() = default;
+
+    // 虚函数：打印用户信息，子类可重写
+    virtual void printInfo() const;
+
+    // 将用户基础信息转为逗号分隔字符串（只存账号、密码、角色，借阅记录单独存文件）
+    string toString() const;
 };
 
-#endif //LIBRARY_MANAGEMENT_SYSTEM_USER_H
+#endif

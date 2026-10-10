@@ -1,27 +1,29 @@
-#ifndef LIBRARY_MANAGEMENT_SYSTEM_BORROWRECORD_H
-#define LIBRARY_MANAGEMENT_SYSTEM_BORROWRECORD_H
+#ifndef BORROWRECORD_H
+#define BORROWRECORD_H
 
 #include <string>
+#include <iostream>
+using namespace std;
 
-class BorrowRecord {
-private:
-    std::string id;
-    std::string bookId;
-    std::string userId;
-    std::string borrowDate; // Consider using a proper date/time type if available
-    std::string returnDate; // Consider using a proper date/time type if available
-
+// 借阅记录类，保存借书还书相关信息
+class BorrowRecord
+{
 public:
-    BorrowRecord(const std::string& id, const std::string& bookId, const std::string& userId,
-                 const std::string& borrowDate, const std::string& returnDate = "");
+    string account;      // 读者账号
+    string bookIsbn;     // 图书ISBN编号
+    string bookName;     // 图书名称
+    string borrowDate;   // 借书日期
+    string returnDate;   // 还书日期，为空代表未归还
 
-    std::string getId() const;
-    std::string getBookId() const;
-    std::string getUserId() const;
-    std::string getBorrowDate() const;
-    std::string getReturnDate() const;
+    // 构造函数，带默认参数，支持无参创建对象
+    BorrowRecord(string account="", string bookIsbn="", string bookName="",
+                 string borrowDate="", string returnDate="");
 
-    void setReturnDate(const std::string& returnDate);
+    // 打印借阅记录信息
+    void printRecord() const;
+
+    // 将借阅记录转为逗号分隔字符串，用于保存到文件
+    string toString() const;
 };
 
-#endif //LIBRARY_MANAGEMENT_SYSTEM_BORROWRECORD_H
+#endif

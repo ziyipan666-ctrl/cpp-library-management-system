@@ -7,7 +7,7 @@
 using namespace std;
 
 /**
- * @brief 读者业务聚合服务，组合service给controller调用
+ * 读者业务聚合服务，组合service给controller调用
  */
 class ReaderService {
 private:
@@ -16,6 +16,7 @@ private:
     BorrowService& borrowService;
 public:
     ReaderService(BookService& bs, UserService& us, BorrowService& brs);
+    bool login(const string& account, const string& password);
 
     // 查询本人借阅记录
     vector<BorrowRecord> getMyBorrowRecords(const string& account);
@@ -29,3 +30,4 @@ public:
     bool returnBook(const string& account, const string& bookIsbn, const string& returnDate);
 };
 #endif
+

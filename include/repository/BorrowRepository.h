@@ -1,30 +1,27 @@
-#ifndef LIBRARY_MANAGEMENT_SYSTEM_BORROWREPOSITORY_H
-#define LIBRARY_MANAGEMENT_SYSTEM_BORROWREPOSITORY_H
+#ifndef BORROWREPOSITORY_H
+#define BORROWREPOSITORY_H
 
 #include <vector>
 #include <string>
-#include <memory>
-#include "../entity/BorrowRecord.h"
+#include "BorrowRecord.h"
+using namespace std;
 
-class BorrowRepository {
+// 借阅记录仓库，操作borrow_records.txt
+class BorrowRepository
+{
 private:
-    std::string filename;
-    std::vector<std::shared_ptr<BorrowRecord>> records;
-
-    void loadRecords();
-    void saveRecords();
-
+    string filePath;
 public:
-    BorrowRepository(const std::string& filename);
-    ~BorrowRepository();
+    // 构造函数，传入借阅记录文件路径
+    BorrowRepository(string path);
 
-    std::shared_ptr<BorrowRecord> findById(const std::string& id);
-    std::vector<std::shared_ptr<BorrowRecord>> findByBookId(const std::string& bookId);
-    std::vector<std::shared_ptr<BorrowRecord>> findByUserId(const std::string& userId);
-    void addRecord(const std::shared_ptr<BorrowRecord>& record);
-    void updateRecord(const std::shared_ptr<BorrowRecord>& record); // Update by ID
-    void deleteRecord(const std::string& id);
-    std::vector<std::shared_ptr<BorrowRecord>> getAllRecords() const;
+    // 读取全部借还记录
+    vector<BorrowRecord> loadAllRecords();
+
+    // 保存全部借还记录
+    // recordList 记录集合
+    // return true成功 false失败
+    bool saveAllRecords(const vector<BorrowRecord>& recordList);
 };
 
-#endif //LIBRARY_MANAGEMENT_SYSTEM_BORROWREPOSITORY_H
+#endif

@@ -34,9 +34,8 @@ add_executable(
     ${SOURCES}
 )
 
-# Windows控制台UTF-8中文支持
-if (WIN32)
-    target_compile_options(LibraryManagementSystem PRIVATE /utf-8)
+if(MSVC)
+    add_compile_options(/utf-8)
 endif()
 
 # =====================================

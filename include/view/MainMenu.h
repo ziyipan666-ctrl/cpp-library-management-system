@@ -1,11 +1,19 @@
-#ifndef LIBRARY_MANAGEMENT_SYSTEM_MAINMENU_H
-#define LIBRARY_MANAGEMENT_SYSTEM_MAINMENU_H
+#ifndef MAINMENU_H
+#define MAINMENU_H
+#include "LoginController.h"
+using namespace std;
 
-#include <iostream>
-
+/**
+ * @brief 程序主菜单视图：登录、注册、退出系统入口
+ */
 class MainMenu {
+private:
+    LoginController& loginCtrl;
 public:
-    void display();
+    MainMenu(LoginController& lc);
+    // 启动主菜单循环
+    void showMainLoop();
+    // 退出系统
+    void exitApp();
 };
-
-#endif //LIBRARY_MANAGEMENT_SYSTEM_MAINMENU_H
+#endif

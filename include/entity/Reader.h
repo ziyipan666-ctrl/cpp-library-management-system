@@ -1,19 +1,15 @@
-#ifndef LIBRARY_MANAGEMENT_SYSTEM_READER_H
-#define LIBRARY_MANAGEMENT_SYSTEM_READER_H
-
+#ifndef READER_H
+#define READER_H
 #include "User.h"
-
-class Reader : public User {
-private:
-    int borrowedBookCount;
-
+using namespace std;
+// 读者类，公有继承User基类
+class Reader : public User
+{
 public:
-    Reader(const std::string& id, const std::string& username, const std::string& password, int borrowedBookCount = 0);
+    // 构造函数，角色固定为1（读者）
+    Reader(string account = "", string password = "");
 
-    int getBorrowedBookCount() const;
-    void setBorrowedBookCount(int count);
-    void incrementBorrowedBookCount();
-    void decrementBorrowedBookCount();
+    // 重写打印信息，增加读者标识
+    void printInfo() const override;
 };
-
-#endif //LIBRARY_MANAGEMENT_SYSTEM_READER_H
+#endif

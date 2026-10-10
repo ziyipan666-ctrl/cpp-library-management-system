@@ -1,76 +1,101 @@
-#include "../../../include/controller/ReaderController.h"
+#include "ReaderController.h"
 
+bool ReaderController::login(const string& account, const string& password)
+{
+    return readerService.login(account,password);
+}
+
+
+//读者控制器，调用readerService、bookService、borrowService
 ReaderController::ReaderController(ReaderService& rs, BookService& bs, BorrowService& brs)
     : readerService(rs), bookService(bs), borrowService(brs)
 {
 }
 
-//图书查询
-std::shared_ptr<Book> ReaderController::queryBookById(const std::string& bookId)
+//图书相关，调用readerService=========================================================================
+//图书查询--------------------------------------------------------------------------------------
+//根据isbn查询图书
+vector<Book> ReaderController::queryBookByIsbn(const string& isbn)
 {
-    return bookService.queryBookById(bookId);
+    return bookService.queryByIsbn(isbn);
 }
 
-std::shared_ptr<Book> ReaderController::queryBookByIsbn(const std::string& isbn)
+//根据书名查询图书
+vector<Book> ReaderController::queryBookByName(const string& name)
 {
-    return bookService.queryBookByIsbn(isbn);
+    return bookService.queryByName(name);
 }
 
-std::vector<std::shared_ptr<Book>> ReaderController::queryBookByTitle(const std::string& title)
+//根据作者查询图书
+vector<Book> ReaderController::queryBookByAuthor(const string& author)
 {
-    return bookService.queryBooksByTitle(title);
+    return bookService.queryByAuthor(author);
 }
 
-std::vector<std::shared_ptr<Book>> ReaderController::queryBookByAuthor(const std::string& author)
+//根据出版社查询图书
+vector<Book> ReaderController::queryBookByPublisher(const string& publisher)
 {
-    return bookService.queryBooksByAuthor(author);
+    return bookService.queryByPublisher(publisher);
 }
 
-std::vector<std::shared_ptr<Book>> ReaderController::getAllBookList()
+//查询所有图书
+vector<Book> ReaderController::getAllBookList()
 {
     return bookService.getAllBooks();
 }
 
-std::vector<std::shared_ptr<Book>> ReaderController::getBookPage(const std::vector<std::shared_ptr<Book>>& allBooks, int start, int pageSize)
+//分页查询图书
+vector<Book> ReaderController::getBookPage(const vector<Book>& allBooks, int start, int pageSize)
 {
     return bookService.getPageData(allBooks, start, pageSize);
 }
 
-//借还书
-bool ReaderController::borrowBook(const std::shared_ptr<BorrowRecord>& record)
+//查询最新10本图书
+vector<Book> ReaderController::getNewestTop10Book()
 {
-    return readerService.borrowBook(record);
+    return bookService.getNewestTop10();
+}
+//-------------------------------------------------------------------------------------------------
+//借书
+bool ReaderController::borrowBook(const BorrowRecord& rec)
+{
+    return readerService.borrowBook(rec);
 }
 
-bool ReaderController::returnBook(const std::string& userId, const std::string& bookId, const std::string& returnDate)
+//还书
+bool ReaderController::returnBook(const string& account, const string& bookIsbn, const string& returnDate)
 {
-    return readerService.returnBook(userId, bookId, returnDate);
+    return readerService.returnBook(account, bookIsbn, returnDate);
 }
 
-bool ReaderController::checkIsBorrowedNotReturn(const std::string& userId, const std::string& bookId)
+//判断用户这本书是否未归还
+bool ReaderController::checkIsBorrowedNotReturn(const string& account, const string& bookIsbn)
 {
-    return borrowService.isUserBorrowNotReturn(userId, bookId);
+    return borrowService.isUserBorrowNotReturn(account, bookIsbn);
 }
 
-//账号管理
-bool ReaderController::deleteSelfAccount(const std::string& userId)
+//账号相关，调用readerService===========================================================================================
+
+//删除账号
+bool ReaderController::deleteSelfAccount(const string& account)
 {
-    return readerService.deleteSelf(userId);
+    return readerService.deleteSelf(account);
 }
 
-bool ReaderController::modifySelfPassword(const std::string& userId, const std::string& newPwd)
+//修改密码
+bool ReaderController::modifySelfPassword(const string& account, const string& newPwd)
 {
-    return readerService.modifySelfPassword(userId, newPwd);
+    return readerService.modifySelfPassword(account, newPwd);
 }
 
 //借阅记录
-std::vector<std::shared_ptr<BorrowRecord>> ReaderController::getMyBorrowRecords(const std::string& userId)
+vector<BorrowRecord> ReaderController::getMyBorrowRecords(const string& account)
 {
-    return readerService.getMyBorrowRecords(userId);
+    return readerService.getMyBorrowRecords(account);
 }
 
 //排行榜
-std::vector<std::pair<std::string,int>> ReaderController::getBorrowTop10()
+vector<pair<string,int>> ReaderController::getBorrowTop10()
 {
     return borrowService.getBorrowCountTop10();
 }

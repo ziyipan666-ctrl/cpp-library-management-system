@@ -12,6 +12,8 @@ build/
 cmake-build-*/
 CMakeCache.txt
 CMakeFiles/
+# 运行数据目录，不提交
+data/
 install_manifest.txt
 
 # ========== VS Code 本地IDE缓存（不上传github） ==========

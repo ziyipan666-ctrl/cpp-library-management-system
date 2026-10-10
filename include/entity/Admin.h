@@ -1,11 +1,15 @@
-#ifndef LIBRARY_MANAGEMENT_SYSTEM_ADMIN_H
-#define LIBRARY_MANAGEMENT_SYSTEM_ADMIN_H
-
+#ifndef ADMIN_H
+#define ADMIN_H
 #include "User.h"
-
-class Admin : public User {
+using namespace std;
+// 管理员类，公有继承User基类
+class Admin : public User
+{
 public:
-    Admin(const std::string& id, const std::string& username, const std::string& password);
-};
+    // 构造函数，角色固定为2（管理员）
+    Admin(string account = "", string password = "");
 
-#endif //LIBRARY_MANAGEMENT_SYSTEM_ADMIN_H
+    // 重写打印信息，增加管理员标识
+    void printInfo() const override;
+};
+#endif

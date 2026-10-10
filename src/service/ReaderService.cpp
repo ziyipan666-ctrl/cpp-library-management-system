@@ -1,52 +1,53 @@
-#include "../../../include/service/ReaderService.h"
+#include "ReaderService.h"
 
+// 构造函数，传入图书、用户、借阅服务
 ReaderService::ReaderService(BookService& bs, UserService& us, BorrowService& brs)
     : bookService(bs), userService(us), borrowService(brs)
 {
 }
 
-std::vector<std::shared_ptr<BorrowRecord>> ReaderService::getMyBorrowRecords(const std::string& userId)
-{
-    return borrowService.getMyBorrowRecords(userId);
-}
 
-bool ReaderService::modifySelfPassword(const std::string& userId, const std::string& newPwd)
+// 查询本人借阅记录
+vector<BorrowRecord> ReaderService::getMyBorrowRecords(const string& account)
 {
-    return userService.updateUserPassword(userId, newPwd);
-}
-
-bool ReaderService::deleteSelf(const std::string& userId)
-{
-    return userService.deleteUser(userId);
-}
-
-bool ReaderService::borrowBook(const std::shared_ptr<BorrowRecord>& record)
-{
-    // Need to ensure the book exists and is available
-    std::shared_ptr<Book> book = bookService.queryBookById(record->getBookId());
-    if (!book || book->getQuantity() <= 0) {
-        return false; // Book not found or out of stock
-    }
-
-    if (borrowService.borrowBook(record)) {
-        // Decrease book quantity
-        book->setQuantity(book->getQuantity() - 1);
-        bookService.updateBook(book);
-        return true;
-    }
-    return false;
-}
-
-bool ReaderService::returnBook(const std::string& userId, const std::string& bookId, const std::string& returnDate)
-{
-    if (borrowService.returnBook(userId, bookId, returnDate)) {
-        // Increase book quantity
-        std::shared_ptr<Book> book = bookService.queryBookById(bookId);
-        if (book) {
-            book->setQuantity(book->getQuantity() + 1);
-            bookService.updateBook(book);
+    vector<BorrowRecord> all = borrowService.getAllRecords();
+    vector<BorrowRecord> res;
+    for(auto& r : all)
+    {
+        if(r.account == account)
+        {
+            res.push_back(r);
         }
-        return true;
     }
-    return false;
+    return res;
+}
+
+// 修改自己密码
+bool ReaderService::modifySelfPassword(const string& account, const string& newPwd)
+{
+    return userService.modifyPassword(account, newPwd);
+}
+
+// 注销自己账号
+bool ReaderService::deleteSelf(const string& account)
+{
+    return userService.deleteSelf(account);
+}
+
+// 借阅图书
+bool ReaderService::borrowBook(const BorrowRecord& rec)
+{
+    return borrowService.borrowBook(rec);
+}
+
+// 归还图书
+bool ReaderService::returnBook(const string& account, const string& bookIsbn, const string& returnDate)
+{
+    return borrowService.returnBook(account, bookIsbn, returnDate);
+}
+
+
+bool ReaderService::login(const string& account, const string& password)
+{
+    return userService.loginCheck(account,password,1)!=nullptr;
 }

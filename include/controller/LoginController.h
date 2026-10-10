@@ -6,7 +6,7 @@
 using namespace std;
 
 /**
- * @brief 登录注册控制器，处理登录、读者注册请求
+ * 登录注册控制器，处理登录、读者注册请求
  */
 class LoginController {
 private:

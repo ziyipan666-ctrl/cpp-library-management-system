@@ -1,39 +1,35 @@
-#include "../../../include/utils/FileUtil.h"
-#include <fstream>
-#include <string>
-#include <vector>
+#include "FileUtil.h"
 
-namespace FileUtil
+// 读取文件所有行
+vector<string> FileUtil::readAllLines(const string& filePath)
 {
-    std::vector<std::string> readAllLines(const std::string& filePath)
+    vector<string> result;
+    ifstream fin(filePath);
+    if (!fin.is_open())
     {
-        std::vector<std::string> result;
-        std::ifstream fin(filePath);
-        if (!fin.is_open())
-        {
-            return result;
-        }
-        std::string line;
-        while (std::getline(fin, line))
-        {
-            result.push_back(line);
-        }
-        fin.close();
         return result;
     }
-
-    bool writeAllLines(const std::string& filePath, const std::vector<std::string>& lines)
+    string line;
+    while (getline(fin, line))
     {
-        std::ofstream fout(filePath);
-        if (!fout.is_open())
-        {
-            return false;
-        }
-        for (const std::string& s : lines)
-        {
-            fout << s << std::endl;
-        }
-        fout.close();
-        return true;
+        result.push_back(line);
     }
+    fin.close();
+    return result;
+}
+
+// 写入文件所有行
+bool FileUtil::writeAllLines(const string& filePath, const vector<string>& lines)
+{
+    ofstream fout(filePath);
+    if (!fout.is_open())
+    {
+        return false;
+    }
+    for (const string& s : lines)
+    {
+        fout << s << endl;
+    }
+    fout.close();
+    return true;
 }

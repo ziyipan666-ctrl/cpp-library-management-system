@@ -1,78 +1,167 @@
-#include "../../../include/service/BookService.h"
+#include "BookService.h"
 #include <algorithm>
-#include <uuid.h> // For generating UUIDs
 
-BookService::BookService(BookRepository& bookRepository)
-    : bookRepository(bookRepository)
+const int BookService::PAGE_SIZE = 10;
+
+// 构造函数，传入图书数据文件路径
+BookService::BookService(string filePath)
+    : repo(filePath)
 {
 }
 
-std::vector<std::shared_ptr<Book>> BookService::getAllBooks()
+// 获取全部图书
+vector<Book> BookService::getAllBooks()
 {
-    return bookRepository.getAllBooks();
+    return repo.loadAllBooks();
 }
 
-bool BookService::addBook(const std::shared_ptr<Book>& book)
+// 添加图书
+bool BookService::addBook(const Book& book)
 {
-    if (bookRepository.findByIsbn(book->getIsbn())) {
-        return false; // Book with same ISBN already exists
-    }
-    // Generate a unique ID if not already set
-    if (book->getId().empty()) {
-        uuids::uuid_system_generator gen;
-        uuids::uuid new_uuid = gen();
-        const_cast<std::string&>(book->getId()) = uuids::to_string(new_uuid); // Ugly cast, better to have a setter or generate ID in controller
-    }
-    bookRepository.addBook(book);
-    return true;
+    vector<Book> list = repo.loadAllBooks();
+    list.push_back(book);
+    return repo.saveAllBooks(list);
 }
 
-bool BookService::deleteBook(const std::string& bookId)
+// 根据isbn删除图书
+bool BookService::deleteByIsbn(const string& isbn)
 {
-    if (bookRepository.findById(bookId)) {
-        bookRepository.deleteBook(bookId);
-        return true;
-    }
-    return false;
-}
-
-bool BookService::updateBook(const std::shared_ptr<Book>& book)
-{
-    if (bookRepository.findById(book->getId())) {
-        bookRepository.updateBook(book);
-        return true;
+    vector<Book> list = repo.loadAllBooks();
+    for (auto it = list.begin(); it != list.end(); ++it)
+    {
+        if (it->isbn == isbn)
+        {
+            list.erase(it);
+            return repo.saveAllBooks(list);
+        }
     }
     return false;
 }
 
-std::shared_ptr<Book> BookService::queryBookById(const std::string& id)
+// 根据书名删除图书（匹配第一个）
+bool BookService::deleteByName(const string& name)
 {
-    return bookRepository.findById(id);
+    vector<Book> list = repo.loadAllBooks();
+    for (auto it = list.begin(); it != list.end(); ++it)
+    {
+        if (it->name == name)
+        {
+            list.erase(it);
+            return repo.saveAllBooks(list);
+        }
+    }
+    return false;
 }
 
-std::shared_ptr<Book> BookService::queryBookByIsbn(const std::string& isbn)
+// 根据isbn修改图书
+bool BookService::modifyByIsbn(const string& oldIsbn, const Book& newBook)
 {
-    return bookRepository.findByIsbn(isbn);
+    vector<Book> list = repo.loadAllBooks();
+    for (auto& b : list)
+    {
+        if (b.isbn == oldIsbn)
+        {
+            b = newBook;
+            return repo.saveAllBooks(list);
+        }
+    }
+    return false;
 }
 
-std::vector<std::shared_ptr<Book>> BookService::queryBooksByTitle(const std::string& title)
+// 根据书名修改图书（匹配第一个）
+bool BookService::modifyByName(const string& oldName, const Book& newBook)
 {
-    return bookRepository.findByTitle(title);
+    vector<Book> list = repo.loadAllBooks();
+    for (auto& b : list)
+    {
+        if (b.name == oldName)
+        {
+            b = newBook;
+            return repo.saveAllBooks(list);
+        }
+    }
+    return false;
 }
 
-std::vector<std::shared_ptr<Book>> BookService::queryBooksByAuthor(const std::string& author)
+// 查询：按isbn
+vector<Book> BookService::queryByIsbn(const string& isbn)
 {
-    std::vector<std::shared_ptr<Book>> books = bookRepository.findByAuthor(author);
-    // Sort by title alphabetically
-    std::sort(books.begin(), books.end(), [](const std::shared_ptr<Book>& a, const std::shared_ptr<Book>& b) {
-        return a->getTitle() < b->getTitle();
+    vector<Book> res;
+    vector<Book> all = repo.loadAllBooks();
+    for (auto& b : all)
+    {
+        if (b.isbn == isbn)
+            res.push_back(b);
+    }
+    return res;
+}
+
+// 查询：按书名
+vector<Book> BookService::queryByName(const string& name)
+{
+    vector<Book> res;
+    vector<Book> all = repo.loadAllBooks();
+    for (auto& b : all)
+    {
+        if (b.name == name)
+            res.push_back(b);
+    }
+    return res;
+}
+
+// 查询：按作者，结果按书名字典序排序
+vector<Book> BookService::queryByAuthor(const string& author)
+{
+    vector<Book> res;
+    vector<Book> all = repo.loadAllBooks();
+    for (auto& b : all)
+    {
+        if (b.author == author)
+            res.push_back(b);
+    }
+    // 书名字典序升序
+    sort(res.begin(), res.end(), [](const Book& a, const Book& b) {
+        return a.name < b.name;
     });
-    return books;
+    return res;
 }
 
-std::vector<std::shared_ptr<Book>> BookService::getPageData(const std::vector<std::shared_ptr<Book>>& all, int start, int count)
+// 查询：按出版社，结果按书名字典序排序
+vector<Book> BookService::queryByPublisher(const string& publisher)
 {
-    std::vector<std::shared_ptr<Book>> page;
+    vector<Book> res;
+    vector<Book> all = repo.loadAllBooks();
+    for (auto& b : all)
+    {
+        if (b.publisher == publisher)
+            res.push_back(b);
+    }
+    sort(res.begin(), res.end(), [](const Book& a, const Book& b) {
+        return a.name < b.name;
+    });
+    return res;
+}
+
+// 获取最新出版前十本图书
+vector<Book> BookService::getNewestTop10()
+{
+    vector<Book> all = repo.loadAllBooks();
+    sort(all.begin(), all.end(), Book::cmpByPublishDate);
+    vector<Book> top;
+    int cnt = 0;
+    for (auto& b : all)
+    {
+        if (cnt >= 10) break;
+        top.push_back(b);
+        cnt++;
+    }
+    return top;
+}
+
+// 分页获取图书，start下标，count取多少条
+vector<Book> BookService::getPageData(const vector<Book>& all, int start, int count)
+{
+    vector<Book> page;
     int end = start + count;
     for (int i = start; i < end && i < (int)all.size(); i++)
     {

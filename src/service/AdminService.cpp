@@ -1,36 +1,55 @@
-#include "../../../include/service/AdminService.h"
+#include "AdminService.h"
 
+// 构造函数，传入图书服务和用户服务引用
 AdminService::AdminService(BookService& bs, UserService& us)
     : bookService(bs), userService(us)
 {
 }
 
-bool AdminService::addBook(const std::shared_ptr<Book>& book)
+// 添加图书
+bool AdminService::addBook(const Book& book)
 {
     return bookService.addBook(book);
 }
 
-bool AdminService::deleteBookById(const std::string& bookId)
+// 根据ISBN删除图书
+bool AdminService::deleteBookByIsbn(const string& isbn)
 {
-    return bookService.deleteBook(bookId);
+    return bookService.deleteByIsbn(isbn);
 }
 
-bool AdminService::updateBook(const std::shared_ptr<Book>& book)
+// 根据书名删除图书
+bool AdminService::deleteBookByName(const string& name)
 {
-    return bookService.updateBook(book);
+    return bookService.deleteByName(name);
 }
 
-bool AdminService::addUser(const std::string& username, const std::string& password, const std::string& role)
+// 根据ISBN修改图书
+bool AdminService::modifyBookByIsbn(const string& oldIsbn, const Book& newBook)
 {
-    return userService.registerUser(username, password, role);
+    return bookService.modifyByIsbn(oldIsbn, newBook);
 }
 
-bool AdminService::deleteUserById(const std::string& userId)
+// 根据书名修改图书
+bool AdminService::modifyBookByName(const string& oldName, const Book& newBook)
 {
-    return userService.deleteUser(userId);
+    return bookService.modifyByName(oldName, newBook);
 }
 
-bool AdminService::modifyUserPassword(const std::string& userId, const std::string& newPwd)
+// 添加用户
+bool AdminService::addUser(const string& account, const string& password, int role)
 {
-    return userService.updateUserPassword(userId, newPwd);
+    return userService.addUser(account, password, role);
+}
+
+// 删除用户
+bool AdminService::deleteUserByAccount(const string& account)
+{
+    return userService.deleteUserByAccount(account);
+}
+
+// 修改用户密码
+bool AdminService::modifyUserPassword(const string& account, const string& newPwd)
+{
+    return userService.modifyPassword(account, newPwd);
 }

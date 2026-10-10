@@ -1,107 +1,140 @@
-#include "../../../include/controller/AdminController.h"
+#include "AdminController.h"
 
 AdminController::AdminController(AdminService &as, BookService &bs, UserService &us, BorrowService &brs)
     : adminService(as), bookService(bs), userService(us), borrowService(brs)
 {
 }
+//管理员登录
+bool AdminController::login(const string& account, const string& password)
+{
+    return userService.loginCheck(account, password, 2) != nullptr;
+}
 
-// 图书增删改，调用adminService
-bool AdminController::addBook(const std::shared_ptr<Book>& book)
+//图书管理，调用adminService--------------------------------------------------------------------------
+//图书增加
+bool AdminController::addBook(const Book& book)
 {
     return adminService.addBook(book);
 }
 
-bool AdminController::deleteBookById(const std::string& bookId)
+//根据isbn删除图书
+bool AdminController::deleteBookByIsbn(const string& isbn)
 {
-    return adminService.deleteBookById(bookId);
+    return adminService.deleteBookByIsbn(isbn);
 }
 
-bool AdminController::updateBook(const std::shared_ptr<Book>& book)
+//根据书名删除图书
+bool AdminController::deleteBookByName(const string& name)
 {
-    return adminService.updateBook(book);
+    return adminService.deleteBookByName(name);
+}
+
+//根据isbn修改图书
+bool AdminController::modifyBookByIsbn(const string& oldIsbn, const Book& newBook)
+{
+    return adminService.modifyBookByIsbn(oldIsbn, newBook);
+}
+
+//根据书名修改图书
+bool AdminController::modifyBookByName(const string& oldName, const Book& newBook)
+{
+    return adminService.modifyBookByName(oldName, newBook);
 }
 
 //图书查询，直接调用bookService
-std::shared_ptr<Book> AdminController::queryBookById(const std::string& bookId)
+vector<Book> AdminController::queryBookByIsbn(const string& isbn)
 {
-    return bookService.queryBookById(bookId);
+    return bookService.queryByIsbn(isbn);
 }
 
-std::shared_ptr<Book> AdminController::queryBookByIsbn(const std::string& isbn)
+//根据书名查询图书
+vector<Book> AdminController::queryBookByName(const string& name)
 {
-    return bookService.queryBookByIsbn(isbn);
+    return bookService.queryByName(name);
 }
 
-std::vector<std::shared_ptr<Book>> AdminController::queryBookByTitle(const std::string& title)
+//根据作者查询图书
+vector<Book> AdminController::queryBookByAuthor(const string& author)
 {
-    return bookService.queryBooksByTitle(title);
+    return bookService.queryByAuthor(author);
 }
 
-std::vector<std::shared_ptr<Book>> AdminController::queryBookByAuthor(const std::string& author)
+//根据出版社查询图书
+vector<Book> AdminController::queryBookByPublisher(const string& publisher)
 {
-    return bookService.queryBooksByAuthor(author);
+    return bookService.queryByPublisher(publisher);
 }
 
-std::vector<std::shared_ptr<Book>> AdminController::getAllBookList()
+//获取全部图书列表
+vector<shared_ptr<Book>> getAllBookList()
 {
     return bookService.getAllBooks();
 }
 
-std::vector<std::shared_ptr<Book>> AdminController::getBookPage(const std::vector<std::shared_ptr<Book>>& allBooks, int start, int pageSize)
+//获取图书分页数据
+vector<Book> AdminController::getBookPage(const vector<Book>& allBooks, int start, int pageSize)
 {
     return bookService.getPageData(allBooks, start, pageSize);
 }
 
-//用户管理
-bool AdminController::addUser(const std::string& username, const std::string& password, const std::string& role)
+//获取最新10本图书
+vector<Book> AdminController::getNewestTop10Book()
 {
-    return adminService.addUser(username, password, role);
+    return bookService.getNewestTop10();
 }
 
-bool AdminController::deleteUserById(const std::string& userId)
+//用户管理，调用adminService-------------------------------------------------------------------------------
+//用户增加
+bool AdminController::addUser(const string& account, const string& password, int role)
 {
-    return adminService.deleteUserById(userId);
+    return adminService.addUser(account, password, role);
 }
 
-bool AdminController::modifyUserPassword(const std::string& userId, const std::string& newPwd)
+//根据账号删除用户
+bool AdminController::deleteUser(const string& account)
 {
-    return adminService.modifyUserPassword(userId, newPwd);
+    return adminService.deleteUserByAccount(account);
 }
 
-std::shared_ptr<User> AdminController::queryUserById(const std::string& userId)
+//根据账号修改用户密码
+bool AdminController::modifyUserPassword(const string& account, const string& newPwd)
 {
-    return userService.getUserById(userId);
+    return adminService.modifyUserPassword(account, newPwd);
 }
 
-std::vector<std::shared_ptr<User>> AdminController::getAllUserList()
+//根据账号查询用户
+vector<User*> AdminController::queryUserByAccount(const string& account)
+{
+    return userService.queryByAccount(account);
+}
+
+//获取全部用户列表
+vector<User*> AdminController::getAllUserList()
 {
     return userService.getAllUsers();
 }
 
-std::vector<std::shared_ptr<User>> AdminController::getUserPage(const std::vector<std::shared_ptr<User>>& allUsers, int start, int pageSize)
+//获取用户分页数据
+vector<User*> AdminController::getUserPage(const vector<User*>& allUsers, int start, int pageSize)
 {
-    // UserService might need a getPageData method, or implement here
-    std::vector<std::shared_ptr<User>> page;
-    int end = start + pageSize;
-    for (int i = start; i < end && i < (int)allUsers.size(); i++)
-    {
-        page.push_back(allUsers[i]);
-    }
-    return page;
+    return userService.getPageData(allUsers, start, pageSize);
 }
 
-//借阅相关，调用borrowService
-std::vector<std::shared_ptr<BorrowRecord>> AdminController::getAllBorrowRecordList()
+//借阅相关，调用borrowService-------------------------------------------------------------------------------
+//获取全部借阅记录
+vector<BorrowRecord> AdminController::getAllBorrowRecordList()
 {
     return borrowService.getAllRecords();
 }
 
-std::vector<std::shared_ptr<BorrowRecord>> AdminController::getBorrowRecordPage(const std::vector<std::shared_ptr<BorrowRecord>>& allRec, int start, int pageSize)
+//获取借阅记录分页数据
+vector<BorrowRecord> AdminController::getBorrowRecordPage(const vector<BorrowRecord>& allRec, int start, int pageSize)
 {
     return borrowService.getPageData(allRec, start, pageSize);
 }
 
-std::vector<std::pair<std::string,int>> AdminController::getBorrowTop10()
+//获取借阅次数最多的10本图书
+vector<pair<string,int>> AdminController::getBorrowTop10()
 {
     return borrowService.getBorrowCountTop10();
 }

@@ -8,6 +8,7 @@ ReaderMenu::ReaderMenu(ReaderController& ctrl)
     : readerCtrl(ctrl)
 { }
 
+// 显示读者菜单循环
 void ReaderMenu::showReaderLoop()
 {
     while(true)
@@ -46,6 +47,7 @@ void ReaderMenu::showReaderLoop()
     }
 }
 
+// 借书功能
 void ReaderMenu::menuBorrowBook()
 {
     int ch;
@@ -74,6 +76,7 @@ void ReaderMenu::menuBorrowBook()
     }while(ch == 1);
 }
 
+// 归还图书功能
 void ReaderMenu::menuReturnBook()
 {
     int ch;
@@ -93,6 +96,7 @@ void ReaderMenu::menuReturnBook()
     }while(ch == 1);
 }
 
+// 查询图书功能
 void ReaderMenu::menuSearchBook()
 {
     int ch;
@@ -139,6 +143,7 @@ void ReaderMenu::menuSearchBook()
     }while(ch == 1);
 }
 
+// 显示排行榜功能
 void ReaderMenu::menuShowRank()
 {
     while(true)
@@ -180,6 +185,7 @@ void ReaderMenu::menuShowRank()
     }
 }
 
+// 注销账号功能
 void ReaderMenu::menuDeleteSelfAccount()
 {
     string acc;
@@ -196,6 +202,7 @@ void ReaderMenu::menuDeleteSelfAccount()
     system("pause");
 }
 
+// 显示借阅记录功能
 void ReaderMenu::menuShowBorrowHistory()
 {
     string account;
@@ -217,7 +224,7 @@ void ReaderMenu::menuShowBorrowHistory()
     system("pause");
 }
 
-
+// 浏览全部图书功能
 void ReaderMenu::menuBrowseAllBook()
 {
     vector<Book> all = readerCtrl.getAllBookList();
