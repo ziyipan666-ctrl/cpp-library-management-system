@@ -66,7 +66,7 @@ vector<Book> AdminController::queryBookByPublisher(const string& publisher)
 }
 
 //获取全部图书列表
-vector<shared_ptr<Book>> getAllBookList()
+vector<Book> AdminController::getAllBookList()
 {
     return bookService.getAllBooks();
 }

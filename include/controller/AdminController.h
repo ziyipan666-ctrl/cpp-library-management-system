@@ -37,7 +37,7 @@ public:
     vector<Book> queryBookByName(const string& name);//根据书名查询图书
     vector<Book> queryBookByAuthor(const string& author);//根据作者查询图书
     vector<Book> queryBookByPublisher(const string& publisher);//根据出版社查询图书
-    vector<shared_ptr<Book>> getAllBookList();//获取全部图书列表
+    vector<Book> getAllBookList();//获取全部图书列表
     vector<Book> getBookPage(const vector<Book>& allBooks, int start, int pageSize);//分页查询图书
     vector<Book> getNewestTop10Book();//获取最新10本图书
 

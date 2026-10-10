@@ -34,8 +34,9 @@ add_executable(
     ${SOURCES}
 )
 
-if(MSVC)
-    add_compile_options(/utf-8)
+if(MINGW)
+    add_compile_options(-finput-charset=UTF-8)
+    add_compile_options(-fexec-charset=UTF-8)
 endif()
 
 # =====================================
